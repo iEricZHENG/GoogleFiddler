@@ -190,7 +190,7 @@ namespace GoogleParse
         /// <param name="p1">检查的开始位置</param>
         /// <param name="count"></param>
         /// <returns></returns>
-        static int getpos(string str, string cstr, int p1, int count)
+        static  int getpos(string str, string cstr, int p1, int count)
         {
             int idx = p1;
             int posc = 0;

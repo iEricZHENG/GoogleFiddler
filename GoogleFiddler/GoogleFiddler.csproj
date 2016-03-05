@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="DataReceivedEventArgs_Kiwi.cs" />
     <Compile Include="googlepoi_parser.cs" />
+    <Compile Include="ParserSearchWord_Kiwi.cs" />
     <Compile Include="Permanence.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

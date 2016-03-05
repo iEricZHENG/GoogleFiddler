@@ -86,23 +86,48 @@ namespace GoogleFiddler
                 }
                 if (dataReceived.fullUrl.Contains("search"))
                 {
+
                     //Console.WriteLine(list[3].GetResponseBodyEncoding());
                     //Console.WriteLine(list[3].);
                     list[3].utilDecodeResponse();
                     string str = list[3].GetResponseBodyAsString();
+                    //2016.3.5-Add KeyWord
+                    string subStrMain = str.Substring(str.IndexOf(")]}"));
+                    int indexStart =ParserSearchWord_Kiwi.getpos(subStrMain, "[[\\\"", 0, 1) + 3;
+                    int indexEnd =ParserSearchWord_Kiwi.getpos(subStrMain, "\\\"", indexStart, 1);
+                    string searchWord = subStrMain.Substring(indexStart + 1, indexEnd - indexStart - 1);
+                    //
                     List<googlepoi> pois = GoogleParse.googlepoi_parser.GetItems(str);
-
-                  
-                    SavePoiToDB(pois);
-                    
-
-                    File.AppendAllText("c://fiddler//KiwiE.txt", list[3].GetResponseBodyAsString(), Encoding.UTF8);    
+                    //SavePoiToDB(pois);                   
+                    SavePoiToDB(pois,searchWord); 
+                    //File.AppendAllText("c://fiddler//KiwiE.txt", list[3].GetResponseBodyAsString(), Encoding.UTF8);    
                 }
-                
+
             }
         }
+        //2016.3.5-Add KeyWord
+        static private void SavePoiToDB(List<googlepoi> pois,string searchWord)
+        {
 
-       static private void SavePoiToDB(List<googlepoi> pois) {
+            foreach (googlepoi poi in pois)
+            {
+                if (!IsExist(poi.oid))
+                {
+                    AppendPoi(poi,searchWord);
+                }
+
+                System.Diagnostics.Debug.Write(poi.name + ",");
+            }
+        }
+        //Kiwi追加
+        static private void AppendPoi(googlepoi poi,string searchWord)
+        {
+
+            string sql = "insert into pois (oid,name,fname,address,classaddress,category,phone,website,lon,lat,ctime,closed,searchword) values ('" + poi.oid + "','" + poi.name + "','" + poi.fname + "','" + poi.address + "','" + poi.classaddress + "','" + poi.category + "','" + poi.phone + "','" + poi.website + "','" + poi.lon + "','" + poi.lat + "',now()," + poi.closed + ",'" + searchWord+ "') ";
+            Permanence.sqlCreate(sql);
+        }
+        //
+        static private void SavePoiToDB(List<googlepoi> pois) {
 
             foreach (googlepoi poi in pois)
             {
